@@ -14,9 +14,10 @@
         
         var features = $("#features-input").val();
 
-        var data = {
-            features : features
-        };
+        var data = {"instances":[
+        {
+            "features" : features
+        }]};
         
         $.ajax({
             type: "POST",
