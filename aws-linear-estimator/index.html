@@ -21,8 +21,25 @@
       margin: 30px 5px 0 2px;
       padding: 15px 20px;
     }
-  </style>
+  
+      #confirm {
+         display: none;
+         background-color: #514E61;
+         color: #FCD116;
+         border: 1px solid #aaa;
+         position: fixed;
+         width: 250px;
+         left: 50%;
+         margin-left: -100px;
+         padding: 6px 8px 8px;
+         box-sizing: border-box;
+         text-align: center;
+      }
 
+      #confirm .message {
+         text-align: left;
+      }
+      </style>
 <script>
     
 
@@ -40,16 +57,20 @@
     <div id="gg1" class="gauge" data-value="50" data-min="0" data-max="100" data-gaugeWidthScale="0.6"></div>
     
   </div>
-    <div id="response">
-            <pre></pre>
-        </div>
+
+
+    <div id="confirm">
+         <div class="message">This might be a fradulant transaction.</div>
+    </div>
     <form id="contact-form" method="post">
          <h4>Features:</h4>
          
         <textarea id="features-input" rows="3" placeholder="Enter your message…" class="form-control" style="width:100%;">0,-0.32333357234920695,1.05745524547602,-0.0483411518056082,-0.607204308469926,1.25982114985563,-0.0917607168463734,1.15910149881154,-0.12433460579324301,-0.174639536425237,-1.6444006451833897,-1.11886302116203,0.202647309859633,1.14596494837297,-1.80235955648842,-0.24717793192731197,-0.0609453515056588,0.846605737903167,0.379454386602278,0.8472622447749741,0.186409421250743,-0.20709826694548397,-0.43389027235615096,-0.261613282942462,-0.0466506062633096,0.211512300497807,0.00829721213659597,0.108494430085674,0.161139166913704,-0.19330594520930533</textarea><br/>
         <div class="g-recaptcha" data-sitekey="6Lc7cVMUAAAAAM1yxf64wrmO8gvi8A1oQ_ead1ys" class="form-control" style="width:100%;"></div>
         <button type="button" id="gg1_refresh2" onClick="submitToAPI(event)" class="btn btn-lg" style="margin-top:20px;">Submit</button>
+        <button type="button" id="gg1_refresh3" onClick="fillit(event)" class="btn btn-lg" style="margin-top:20px;">random</button>
   </form>
+
   <p id="label"></p>
   <p id="score"></p>
 <script>
@@ -62,6 +83,26 @@
     // document.getElementById('gg1_refresh2').addEventListener('click', function() {
     //         gg1.refresh(getRandomInt(0, 1000000));
     //     });
+         function functionAlert(msg, myYes) {
+            var confirmBox = $("#confirm");
+            confirmBox.find(".message").text(msg);
+            confirmBox.show();
+         }
+          function functionhideAlert(msg, myYes) {
+            var confirmBox = $("#confirm");
+            confirmBox.hide();
+         }
+
+         
+    function fillit(e) {
+        var items = ['1,-0.32333357234920695,1.05745524547602,-0.0483411518056082,-0.607204308469926,1.25982114985563,-0.0917607168463734,1.15910149881154,-0.12433460579324301,-0.174639536425237,-1.6444006451833897,-1.11886302116203,0.202647309859633,1.14596494837297,-1.80235955648842,-0.24717793192731197,-0.0609453515056588,0.846605737903167,0.379454386602278,0.8472622447749741,0.186409421250743,-0.20709826694548397,-0.43389027235615096,-0.261613282942462,-0.0466506062633096,0.211512300497807,0.00829721213659597,0.108494430085674,0.161139166913704,-0.19330594520930533',
+        ' 0.32600663,  1.28663757, -2.00718129,  2.4196748 , -1.5329017 ,-1.43280332, -2.45952964,  0.61773779, -1.12586103, -3.23678402, 3.56179496, -3.91467935, -2.12495646, -4.45889503,  0.57820188,-2.34330412, -5.07145011, -0.74917232,  0.22842275,  0.22266668,0.55689467,  0.16977553, -0.17435706,  0.30806132,  0.71099613,-0.23102982,  0.58049523,  0.30098404, -0.32816139, -0.74007777'];
+        var item = items[Math.floor(Math.random()*items.length)];
+        
+        
+        document.getElementById("features-input").value = item;
+        submitToAPI(e)
+    }
 
     function submitToAPI(e) {
         
@@ -95,7 +136,12 @@
             document.getElementById("score").innerHTML = predata.predictions[0].score;
             //document.getElementById('gg1').refresh(getRandomInt(0, 1000000));
             
-            gg1.refresh(100*predata.predictions[0].score )
+            gg1.refresh(100*predata.predictions[0].score );
+            if (predata.predictions[0].predicted_label == 1) {
+                functionAlert();;
+            } else { 
+                functionhideAlert();
+            }
            
 
             // document.getElementById("contact-form").reset();
