@@ -36,7 +36,7 @@ feature_columns_dtype = {'Time': np.float64,
     'V23': np.float64,'V24': np.float64,'V25': np.float64,'V26': np.float64,'V27': np.float64,'V28': np.float64,
     'Amount': np.float64}
 
-label_column_dtype = {'Class': np.float64} 
+label_column_dtype = {'Class': np.int64} 
 
 def merge_two_dicts(x, y):
     z = x.copy()   # start with x's keys and values
@@ -91,7 +91,7 @@ if __name__ == '__main__':
         ('imputer', SimpleImputer(strategy='median')),
         ('scaler', StandardScaler())])
 
-    preprocessor = ColumnTransformer( transformers=[ ('num', numeric_transformer, numeric_features)], remainder="drop")
+    preprocessor = ColumnTransformer( transformers=[ ('num', numeric_transformer, numeric_features)])
     
     preprocessor.fit(concat_data)
 
@@ -111,8 +111,9 @@ def input_fn(input_data, content_type):
     """
     if content_type == 'text/csv':
         # Read the raw input data as CSV.
-        df = pd.read_csv(StringIO(input_data), 
-                         header=None)
+        #print(input_data)
+        df = pd.read_csv(StringIO(input_data), header=None)
+        #print(df)
         
         if len(df.columns) == len(feature_columns_names) + 1:
             # This is a labelled example, includes the ring label
@@ -120,7 +121,7 @@ def input_fn(input_data, content_type):
         elif len(df.columns) == len(feature_columns_names):
             # This is an unlabelled example.
             df.columns = feature_columns_names
-        print(df.columns)   
+        #print(df.columns)   
         print(df.head())   
         return df
     else:
@@ -159,7 +160,7 @@ def predict_fn(input_data, model):
     
         rest of features either one hot encoded or standardized
     """
-    print(input_data.head())
+    #print(input_data.head())
     if 'Class' in input_data:
         
         features = model.transform(input_data.loc[:, input_data.columns != 'Class'])
