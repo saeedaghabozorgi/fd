@@ -66,8 +66,32 @@
         <button type="button" id="gg1_refresh3" onClick="fillit(event)" class="btn btn-lg" style="margin-top:20px;">random</button>
   </form>
 
-  <p id="label"></p>
-  <p id="score"></p>
+  <p></p>
+  
+
+
+  <style type="text/css">
+    .tg  {border-collapse:collapse;border-spacing:0;}
+    .tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+    .tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+    .tg .tg-pnz6{background-color:#f0eea3;border-color:#343434;text-align:left;vertical-align:top}
+    .tg .tg-h035{background-color:#c0c0c0;color:#000000;border-color:#343434;text-align:left;vertical-align:top}
+    .tg .tg-fice{font-weight:bold;background-color:#c0c0c0;color:#000000;border-color:#343434;text-align:left;vertical-align:top}
+    .tg .tg-ur59{border-color:#343434;text-align:left;vertical-align:top}
+    </style>
+    <table class="tg">
+      <tr>
+        <th class="tg-h035"></th>
+        <th class="tg-fice">Fraudulent</th>
+        <th class="tg-fice">Probability</th>
+      </tr>
+      <tr>
+        <td class="tg-ur59">Signal for fraudulent transaction:</td>
+        <td class="tg-pnz6"><p id="label"></p></td>
+        <td class="tg-pnz6"><p id="score"></p></td>
+      </tr>
+    </table>
+
 <script>
     var gg1 = new JustGage({
         id: "gg1",
@@ -135,9 +159,16 @@
             //$('#response pre').html( data );
             //alert(data.body);
             var predata = JSON.parse(data.body);	
- 
-            document.getElementById("label").innerHTML = predata.predictions[0].predicted_label;
-            document.getElementById("score").innerHTML = predata.predictions[0].score;
+
+
+            if (predata.predictions[0].predicted_label == 1) {
+              document.getElementById("label").innerHTML = "Yes";
+            } else { 
+              document.getElementById("label").innerHTML = "No";
+            }
+
+            
+            document.getElementById("score").innerHTML = predata.predictions[0].score.toFixed(2);
             //document.getElementById('gg1').refresh(getRandomInt(0, 1000000));
             
             gg1.refresh(100*predata.predictions[0].score );
