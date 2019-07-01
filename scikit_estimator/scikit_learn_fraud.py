@@ -41,12 +41,12 @@ if __name__ == '__main__':
                           'This usually indicates that the channel ({}) was incorrectly specified,\n' +
                           'the data specification in S3 was incorrectly specified or the role specified\n' +
                           'does not have permission to access the data.').format(args.train, "train"))
-    raw_data = [ pd.read_csv(file, engine="python") for file in input_files ]
+    raw_data = [ pd.read_csv(file, header=None, engine="python") for file in input_files ]
     train_data = pd.concat(raw_data)
 
     # labels are in the first column
-    train_y = train_data.ix[:,30]
-    train_X = train_data.ix[:,:30]
+    train_y = train_data.ix[:,0]
+    train_X = train_data.ix[:,1:]
 
     # Here we support a single hyperparameter, 'max_leaf_nodes'. Note that you can add as many
     # as your training my require in the ArgumentParser above.
@@ -65,6 +65,5 @@ def model_fn(model_dir):
     
     Note that this should have the same name as the serialized model in the main method
     """
-    print(model_dir)
     clf = joblib.load(os.path.join(model_dir, "model.joblib"))
     return clf
